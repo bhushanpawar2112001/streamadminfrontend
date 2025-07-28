@@ -1,0 +1,148 @@
+<div class="min-h-screen bg-gray-900">
+  <!-- Header -->
+  <header class="bg-black border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold text-red-600">User Management</h1>
+        </div>
+        <button
+          (click)="loadUsers()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-200"
+        >
+          Refresh
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Search Bar -->
+    <div class="mb-6">
+      <div class="max-w-md">
+        <label for="search" class="block text-sm font-medium text-gray-300 mb-2">
+          Search Users
+        </label>
+        <div class="relative">
+          <input
+            id="search"
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="searchUsers()"
+            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            placeholder="Search by username or email..."
+          />
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+    </div>
+
+    <!-- Users Table -->
+    <div *ngIf="!loading" class="bg-gray-800 rounded-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead class="bg-gray-700">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                User
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Role
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Status
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Created
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-gray-800 divide-y divide-gray-700">
+            <tr *ngFor="let user of filteredUsers" class="hover:bg-gray-700">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10 rounded-full bg-gray-600 flex items-center justify-center">
+                      <span class="text-sm font-medium text-white">{{ user.username.charAt(0).toUpperCase() }}</span>
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-white">{{ user.username }}</div>
+                    <div class="text-sm text-gray-400">{{ user.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                      [class]="user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                      [class]="user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                  {{ user.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                {{ user.createdAt | date:'short' }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button
+                    (click)="viewHistory(user._id)"
+                    class="text-blue-400 hover:text-blue-300 text-xs"
+                  >
+                    History
+                  </button>
+                  <button
+                    *ngIf="user.status === 'active'"
+                    (click)="blockUser(user._id)"
+                    class="text-red-400 hover:text-red-300 text-xs"
+                  >
+                    Block
+                  </button>
+                  <button
+                    *ngIf="user.status === 'blocked'"
+                    (click)="unblockUser(user._id)"
+                    class="text-green-400 hover:text-green-300 text-xs"
+                  >
+                    Unblock
+                  </button>
+                  <button
+                    *ngIf="user.role === 'user'"
+                    (click)="promoteToAdmin(user._id)"
+                    class="text-purple-400 hover:text-purple-300 text-xs"
+                  >
+                    Promote
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && filteredUsers.length === 0" class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-300">No users found</h3>
+      <p class="mt-1 text-sm text-gray-500">Try adjusting your search criteria.</p>
+    </div>
+  </div>
+</div>

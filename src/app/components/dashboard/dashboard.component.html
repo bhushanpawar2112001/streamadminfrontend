@@ -1,0 +1,141 @@
+<div class="min-h-screen bg-gray-900">
+  <!-- Header -->
+  <header class="bg-black border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold text-red-600">AnimeFlix Admin</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-300">Welcome, {{ currentUser?.username || 'Admin' }}</span>
+          <button
+            (click)="logout()"
+            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-200"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Users -->
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-400">Total Users</p>
+            <p class="text-2xl font-semibold text-white">{{ stats.totalUsers }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Animes -->
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-400">Total Animes</p>
+            <p class="text-2xl font-semibold text-white">{{ stats.totalAnimes }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Users -->
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-400">Active Users</p>
+            <p class="text-2xl font-semibold text-white">{{ stats.activeUsers }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscriptions -->
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-400">Subscriptions</p>
+            <p class="text-2xl font-semibold text-white">{{ stats.totalSubscriptions }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- User Management -->
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-gray-600 transition duration-200 cursor-pointer" (click)="navigateTo('/users')">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-semibold text-white mb-2">User Management</h3>
+            <p class="text-gray-400 text-sm">Manage users, view profiles, block/unblock</p>
+          </div>
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Anime Management -->
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-gray-600 transition duration-200 cursor-pointer" (click)="navigateTo('/anime')">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-semibold text-white mb-2">Anime Management</h3>
+            <p class="text-gray-400 text-sm">Add, edit, delete anime and episodes</p>
+          </div>
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Subscription Management -->
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-gray-600 transition duration-200 cursor-pointer" (click)="navigateTo('/subscriptions')">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-semibold text-white mb-2">Subscription Plans</h3>
+            <p class="text-gray-400 text-sm">Manage subscription plans and pricing</p>
+          </div>
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+    </div>
+  </div>
+</div>
